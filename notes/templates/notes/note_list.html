@@ -1,0 +1,61 @@
+{% extends "notes/base.html" %}
+
+{% block title %}목록 - My Notes{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h3 class="fw-bold mb-0">
+        <i class="bi bi-list-task"></i> 
+        
+        {% if search_query %}
+            '{{ search_query }}' 검색 결과
+        {% elif current_category %}
+            {{ current_category.name }}
+        {% else %}
+            전체 노트
+        {% endif %}
+    </h3>
+    <span class="badge bg-secondary">{{ notes|length }}개의 글</span>
+</div>
+
+{% if search_query %}
+<div class="mb-3">
+    <a href="{% url 'note_list' %}" class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-arrow-counterclockwise"></i> 전체 목록 보기
+    </a>
+</div>
+{% endif %}
+
+<div class="row">
+    {% for note in notes %}
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm hover-lift border-0">
+            <div class="card-body">
+                {% if note.category %}
+                <span class="badge bg-warning text-dark mb-2">{{ note.category.name }}</span>
+                {% endif %}
+                
+                <h5 class="card-title fw-bold">
+                    <a href="{% url 'note_detail' note.pk %}" class="text-dark text-decoration-none stretched-link">
+                        {{ note.title }}
+                    </a>
+                </h5>
+                <h6 class="card-subtitle mb-2 text-muted small">
+                    <i class="bi bi-clock"></i> {{ note.created_at|date:"Y-m-d" }}
+                </h6>
+                <p class="card-text text-secondary mt-3">
+                    {{ note.content|truncatechars:100 }}
+                </p>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-light text-center p-5 border rounded-4">
+            <i class="bi bi-emoji-neutral fs-1 d-block mb-3 text-secondary"></i>
+            <h5>작성된 노트가 없습니다.</h5>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

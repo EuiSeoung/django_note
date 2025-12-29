@@ -1,0 +1,33 @@
+{% extends "notes/base.html" %}
+
+{% block title %}{{ note.title }} - My Notes{% endblock %}
+
+{% block content %}
+<article>
+    <header class="mb-4">
+        {% if note.category %}
+        <span class="badge bg-warning text-dark mb-2">{{ note.category.name }}</span>
+        {% endif %}
+
+        <h1 class="fw-bold mb-2">{{ note.title }}</h1>
+        <div class="text-muted small">
+            <i class="bi bi-clock"></i> 작성일: {{ note.created_at|date:"Y년 m월 d일 H:i" }}
+        </div>
+    </header>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-4" style="min-height: 300px;">
+            {{ note.content|linebreaks }}
+        </div>
+    </div>
+
+    <div class="d-flex gap-2">
+        <a href="{% url 'note_list' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> 목록으로
+        </a>
+        <a href="/admin/notes/note/{{ note.pk }}/change/" class="btn btn-outline-dark ms-auto">
+            <i class="bi bi-pencil"></i> 수정하기(Admin)
+        </a>
+    </div>
+</article>
+{% endblock %}
