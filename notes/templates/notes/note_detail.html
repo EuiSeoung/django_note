@@ -8,8 +8,16 @@
         {% if note.category %}
         <span class="badge bg-warning text-dark mb-2">{{ note.category.name }}</span>
         {% endif %}
+        
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="fw-bold mb-2">{{ note.title }}</h1>
+            
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="htmlToggle" {% if note.is_html %}checked{% endif %}>
+                <label class="form-check-label small text-muted" for="htmlToggle">HTML 렌더링</label>
+            </div>
+        </div>
 
-        <h1 class="fw-bold mb-2">{{ note.title }}</h1>
         <div class="text-muted small">
             <i class="bi bi-clock"></i> 작성일: {{ note.created_at|date:"Y년 m월 d일 H:i" }}
         </div>
@@ -17,7 +25,15 @@
 
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body p-4" style="min-height: 300px;">
-            {{ note.content|linebreaks }}
+            
+            <div id="view-html" style="display: none;">
+                {{ note.content|safe }}
+            </div>
+
+            <div id="view-raw" style="display: none;">
+                {{ note.content|linebreaks }}
+            </div>
+
         </div>
     </div>
 
@@ -30,4 +46,31 @@
         </a>
     </div>
 </article>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const toggle = document.getElementById("htmlToggle");
+        const viewHtml = document.getElementById("view-html");
+        const viewRaw = document.getElementById("view-raw");
+
+        // 화면 상태를 업데이트하는 함수
+        function updateView() {
+            if (toggle.checked) {
+                // 체크되면: HTML 렌더링 화면을 보여줌
+                viewHtml.style.display = "block";
+                viewRaw.style.display = "none";
+            } else {
+                // 체크 풀리면: 그냥 텍스트(코드) 화면을 보여줌
+                viewHtml.style.display = "none";
+                viewRaw.style.display = "block";
+            }
+        }
+
+        // 1. 처음 페이지 들어왔을 때 상태 적용
+        updateView();
+
+        // 2. 체크박스를 딸깍거릴 때마다 실행
+        toggle.addEventListener("change", updateView);
+    });
+</script>
 {% endblock %}

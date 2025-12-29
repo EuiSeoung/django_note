@@ -17,5 +17,7 @@ class Note(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.CASCADE)
 
+    is_html = models.BooleanField(default=False, verbose_name="HTML 코드 적용")
+
     def __str__(self):
         return self.title

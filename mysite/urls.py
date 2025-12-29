@@ -25,4 +25,5 @@ urlpatterns = [
     path("", views.note_list, name="note_list"),
     path("category/<str:slug>/", views.category_page, name="category_page"),
     path("note/<int:pk>/", views.note_detail, name="note_detail"),
+    path("note/new/", views.note_create, name="note_create"),
 ]

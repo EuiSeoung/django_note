@@ -1,6 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 from .models import Note, Category
+from .forms import NoteForm
 
 def note_list(request):
     notes = Note.objects.all().order_by("-created_at")
@@ -40,3 +41,14 @@ def note_detail(request, pk):
         "note": note,
         "categories": categories
     })
+
+def note_create(request):
+    if request.method == 'POST':
+        form = NoteForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('note_list')
+    else:
+        form = NoteForm()
+
+    return render(request, 'notes/note_form.html', {'form': form})
